@@ -17,6 +17,6 @@ internal class FindPLCDriverWithIdQueryHandler : IRequestHandler<FindPLCDriverWi
   }
   public async Task<PLCDriver?> Handle(FindPLCDriverWithIdQuery request, CancellationToken cancellationToken) 
   {
-    return await _plcDriverRepository.GetAsync(s => s.Id == request.Id);
+    return await _plcDriverRepository.GetByIdAsync(request.Id);
   }
 }

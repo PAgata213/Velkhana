@@ -7,7 +7,7 @@ using MediatR;
 using Velkhana.MES.PLCService.Domain.PLC.Aggregates;
 
 namespace Velkhana.MES.PLCService.Application.PLC.Query.Find;
-public record FindPLCDriverWithIdQuery : IRequest<PLCDriver>
+public record FindPLCDriverWithIdQuery : IRequest<PLCDriver?>
 {
-  public Guid Id { get; init; }
+  public required Guid Id { get; init; }
 }

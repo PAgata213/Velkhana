@@ -25,13 +25,25 @@ public class RepositoryBase<T> : IRepository<T>
   public async Task<T?> GetAsync(Expression<Func<T, bool>> predictate) 
     => await _dbContext.Set<T>().FirstOrDefaultAsync(predictate);
 
+  public async Task<T?> GetByIdAsync(Guid id)
+    => await GetAsync(s => s.Id == id);
+
   public async Task AddAsync(T entity)
     => await _dbContext.Set<T>().AddAsync(entity);
 
   public void Remove(T entity)
+    => _dbContext.Set<T>().Remove(entity);
+
+  public async Task RemoveWithId(Guid id) 
   {
-    _dbContext.Set<T>().Remove(entity);
+    var entity = await GetByIdAsync(id);
+    if(entity == null)
+    {
+      return;
+    }
+    Remove(entity);
   }
+
 
   public async Task<int> SaveChangesAsync()
     => await _dbContext.SaveChangesAsync();

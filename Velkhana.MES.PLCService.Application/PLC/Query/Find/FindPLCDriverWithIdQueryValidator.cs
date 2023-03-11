@@ -10,6 +10,6 @@ internal class FindPLCDriverWithIdQueryValidator : AbstractValidator<FindPLCDriv
 {
   public FindPLCDriverWithIdQueryValidator()
   {
-    RuleFor(s => s.Id).NotNull().NotEmpty();
+    RuleFor(s => s.Id).NotEmpty();
   }
 }

@@ -30,10 +30,9 @@ public class PLCWebApi : IWebAPI
     return TypedResults.Ok();
   }
 
-  public async Task<IResult> CreatePLC(HttpClient httpClient, HttpRequestMessage request, CreatePLCDriverCommand command)
+  public async Task<IResult> CreatePLC(HttpClient httpClient, HttpRequest request)
   {
-    return TypedResults.Ok();
-    //return await httpClient.PostAsJsonAsync("", command);
+    return await IWebAPI.ForwardRequest(httpClient, request, "https://localhost:7275/plc/create/");
   }
 
   public async Task<IResult> UpdatePLC()

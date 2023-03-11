@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using ErrorOr;
@@ -37,12 +39,27 @@ public interface IWebAPI
     };
   }
 
-  //public static IResult SendToMediator()
-  //{
-  //  using(var mediator )
-  //  {
+  public static async Task<IResult> ForwardRequest(HttpClient httpClient, HttpRequest request, string requestUri)
+  {
+    var requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri)
+    {
+      Content = new StreamContent(request.Body)
+    };
+    var response = await httpClient.SendAsync(requestMessage);
+    var content = await response.Content.ReadAsStringAsync();
+    return GetResultFromStatusCode(response.StatusCode, content);
+  }
 
-  //  }
-  //    return 
-  //}
+  private static IResult GetResultFromStatusCode(HttpStatusCode code, string content)
+    => code switch
+    {
+      HttpStatusCode.OK => TypedResults.Ok(content),
+      HttpStatusCode.Created => TypedResults.Created(content),
+      HttpStatusCode.Accepted => TypedResults.Accepted(content),
+      HttpStatusCode.BadRequest => TypedResults.BadRequest(content),
+      HttpStatusCode.Unauthorized => TypedResults.Unauthorized(),
+      HttpStatusCode.Forbidden => TypedResults.Forbid(),
+      HttpStatusCode.NotFound => TypedResults.NotFound(content),
+      HttpStatusCode.Conflict => TypedResults.Conflict(content)
+    };
 }
